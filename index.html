@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libro de Pases Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: url("../../../xampp/istockphoto-1158845830-612x612 (4).jpg") no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #A2A2A2;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar a {
+            color: #0F6081;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+        }
+
+        .navbar a:hover {
+            background-color: #0a9396;
+        }
+
+        .container {
+            max-width: 800px;
+            background-color: rgba(243,243,243,0.5);
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #005f73;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        label {
+            font-weight: bold;
+            color: #005f73;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        input[type="text"], select, input[type="time"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+        }
+
+        input[type="button"] {
+            background-color: #0a9396;
+            color: white;
+            padding: 12px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="button"]:hover {
+            background-color: #94d2bd;
+        }
+
+        .icon-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .icon-container i {
+            font-size: 3rem;
+            color: #005f73;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Barra de navegación -->
+<nav class="navbar">
+    <a href="#inicio">Inicio</a>
+    <a href="../../../xampp/contacto_villa_acero.html">Contacto</a>
+</nav>
+
+<!-- Contenedor principal -->
+<main class="container">
+    <h1>Registro de Atraso</h1>
+
+    <div class="icon-container">
+        <i class="fas fa-book"></i>
+    </div>
+
+    <form action="guardar_pase.php" method="POST">
+        <div>
+            <label for="fecha">Selecciona fecha de emisión de pase:</label>
+            <input type="text" id="fecha" name="fecha" placeholder="Selecciona varias fechas">
+        </div>
+        <div>
+            <label for="hora">Hora de atraso:</label>
+            <input type="time" id="hora" name="hora" required>
+        </div>
+
+        <div>
+            <label for="asignatura">Paradocente a cargo:</label>
+            <select id="asignatura" name="asignatura">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="curso">Curso del alumno:</label>
+            <select id="curso" name="curso" onchange="filtrarAlumnos()">
+                <option value="">Selecciona un curso</option>
+                <option value="1°A">1°A</option>
+                <option value="1°B">1°B</option>
+                <!-- Agrega más opciones aquí -->
+            </select>
+        </div>
+
+        <div>
+            <label for="alumno">Alumno:</label>
+            <select id="alumno" name="alumno">
+                <option value="">Selecciona un alumno</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="motivo">Motivo de atraso:</label>
+            <select id="motivo" name="motivo">
+                <option value="Atraso estándar">Atraso estándar</option>
+                <option value="Inasistencia">Inasistencia</option>
+                <!-- Más opciones aquí -->
+            </select>
+        </div>
+
+        <div>
+            <label for="observacion">Observación:</label>
+            <input type="text" id="observacion" name="observacion" placeholder="Ingrese una observación" required>
+        </div>
+
+        <input type="submit" value="Registrar pase">
+    </form>
+</main>
+
+<script>
+    // Inicialización de fecha
+    flatpickr("#fecha", {
+        mode: "multiple",
+        dateFormat: "Y-m-d"
+    });
+
+    // Datos de alumnos por curso
+    const alumnosPorCurso = {
+        "1°A": ["Antonio", "Manuel", "Edgard"],
+        "1°B": ["Brayan", "Gerardo"],
+        // Agrega más cursos y alumnos
+    };
+
+    // Filtrar alumnos según curso
+    function filtrarAlumnos() {
+        const cursoSeleccionado = document.getElementById("curso").value;
+        const alumnosSelect = document.getElementById("alumno");
+        alumnosSelect.innerHTML = "<option value=''>Selecciona un alumno</option>";
+
+        if (cursoSeleccionado && alumnosPorCurso[cursoSeleccionado]) {
+            const alumnos = alumnosPorCurso[cursoSeleccionado];
+            alumnos.forEach(alumno => {
+                const option = document.createElement("option");
+                option.value = alumno;
+                option.textContent = alumno;
+                alumnosSelect.appendChild(option);
+            });
+        }
+    }
+</script>
+
+</body>
+</html>
